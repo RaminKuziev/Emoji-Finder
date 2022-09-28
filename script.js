@@ -1,5 +1,6 @@
 "use-strict";
 import { data } from "./emoji.js";
+//сюда вставляються все карточки
 const cardsWrapper = document.querySelector(".js-wrapper");
 console.log(cardsWrapper);
 
@@ -20,9 +21,9 @@ console.log(cardsWrapper);
 // div.append(cardsTitle);                                                                  // добовляем в див h3
 // div.append(cardParagraf);                                                                // добовляем в див p
 // console.log(div);
-
 // cardsWrapper.append(div);                                                                // добавляем в разметке HTML в cardsWrapper наш созданный div
 
+//удаляет дубликаты слов в ключе keywords
 const enumeration = () =>
   data.map((elem) => {
     return {
@@ -30,8 +31,11 @@ const enumeration = () =>
       keywords: [...new Set(elem.keywords.split(" "))].join(" "),
     };
   });
+
+// sum хранит новый маcив без дубликатов в ключе keywords
 let sum = enumeration();
 
+// создаём новую карточку
 function createCards(object) {
   let div = document.createElement("div");
   div.className = "cards";
@@ -46,6 +50,36 @@ function createCards(object) {
   div.append(cardParagraf);
   cardsWrapper.append(div);
 }
-for (let i = 0; i < sum.length; i++) {
-  createCards(sum[i]);
+
+//проходим по массиву с данными и отрисовываем все карточки
+//в переменной sum хранятся все карточки
+function repetition(parametr) {
+  for (let i = 0; i < parametr.length; i++) {
+    createCards(parametr[i]);
+  }
 }
+repetition(sum);
+
+function serchInInput(event) {
+  // переменная для хранения отфильтрованных карточек
+  let newMass = [];
+  if (!event.target.value) {
+    repetition(sum);
+  } else {
+    for (let i = 0; i < sum.length; i++) {
+      if (sum[i].title.toLowerCase().trim()===event.target.value.toLowerCase().trim()
+      ) {
+        newMass.push(sum[i]);
+      }
+    }
+    cardsWrapper.innerHTML = "";
+    // тут мы отрисовываем отфильтрованые карточки
+    repetition(newMass);
+  }
+}
+
+let globalSerch = document.querySelector(".serch");
+globalSerch.addEventListener("input", serchInInput);
+
+
+// newMass = sum.filter(function())
